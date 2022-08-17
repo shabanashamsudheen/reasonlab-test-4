@@ -5,6 +5,7 @@ const Joi = require('joi');
 
 
 router.post('/create-order', async function (req, res) {
+   
     // const schema = Joi.object({
     //    });
     // const { error } =schema.validate(req.body);
@@ -36,9 +37,9 @@ function addtoDoughchef(){
     executeQuerySelect('SELECT dc_id FROM `dough_chef` where status = 0 ', function (err, chefs) {
         if(chefs.length>0){
             //moving into dough
-
+            console.log('a',chefs) 
             executeQueryInsert('INSERT INTO dough_data (order_id,chef_id) VALUES ? ',
-            [[order_id,chefs[0]]],
+            [[order_id,chefs[0]['dc_id']]],
             function (ordererr, orderresult) {
               //after 7 seconds moving to topping
                 
@@ -49,7 +50,7 @@ function addtoDoughchef(){
                     function (err, result) {
                         if (err) return res.status(500).send({ status: false, data: err, message: "failed" });
                     })
-                    let orderstatus={status:1,updated_at:new Date().getTime()}
+                    let orderstatus={status:1}
                     console.log('ORDER ID: '+order_id+' reached to dough chef at '+new Date().toTimeString().split(' ')[0])
                     executeQueryUpdate('UPDATE `orders` SET ? where `order_id`=? ',
                     [orderstatus, order_id],
@@ -61,7 +62,7 @@ function addtoDoughchef(){
                             handovertotoppings() ;
                             let data = { status: 0 };
                             executeQueryUpdate('UPDATE `dough_chef` SET ? where `dc_id`=? ',
-                                [data, chefs[0]],
+                                [data, chefs[0]['dc_id']],
                                 function (err, result) {
                                     if (err) return res.status(500).send({ status: false, data: err, message: "failed" });
                                 })
@@ -100,7 +101,7 @@ function addtoDoughchef(){
                     function (ordererr, orderresult) {
                         let oven_id=orderresult.insertId
                         setTimeout(()=>{
-                            let data={status:3,updated_at:new Date().getTime()}
+                            let data={status:3}
                             console.log('ORDER ID: '+order_id+' moved from oven at '+new Date().toTimeString().split(' ')[0])
                             //now order is moved from oven.
                             executeQueryUpdate('update orders set ? where order_id=?',
@@ -150,13 +151,13 @@ function handovertoWaiter(){
                             setTimeout(()=>{
                                let data = { status: 0 };
                                 executeQueryUpdate('UPDATE `waiters` SET ? where `w_id`=? ',
-                                    [data, chefs[0]],
+                                    [data, chefs[0].w_id],
                                     function (err, result) {
                                         if (err) return res.status(500).send({ status: false, data: err, message: "failed" });
                                     })
-                                    let orderstatus={status:4,updated_at:new Date().getTime()}
+                                    let orderstatus={status:4}
                                     console.log('ORDER ID: '+order_id+' served at '+new Date().toTimeString().split(' ')[0])
-                                    console.log('ORDER ID: '+order_id+' Total Time taken - '+((new Date().getTime()-new Date(orders[0].created_at))))
+                                    console.log('ORDER ID: '+order_id+' Total Time taken - '+((new Date().getTime()-new Date(orders[0].created_at).getTime())))+'ms'
                                     executeQueryUpdate('UPDATE `orders` SET ? where `order_id`=? ',
                                     [orderstatus, order_id],
                                     function (err, result) {
@@ -182,7 +183,7 @@ function handovertotoppings(){
                         if(toppings.length>0){
                             toppings.forEach((top,index)=>{
                                 //status to to identify it is just assigned not completed all toppings
-                                chefstatus={chef_id:chefs[0],status:2}
+                                chefstatus={chef_id:chefs[0]['tc_id'],status:2}
                                 //update into topping
                                 executeQueryUpdate('update topping_data set ? where order_id=?',
                                 [chefstatus, order_id],
@@ -208,11 +209,11 @@ function handovertotoppings(){
                                 })
                         }
                         else{
-                            chefstatus1={chef_id:chefs[0],status:1}
+                            chefstatus1={chef_id:chefs[0]['tc_id'],status:1}
                             //update into topping
                             executeQueryUpdate('update topping_data set ? where order_id=?',
                             [chefstatus1, order_id],function (err,res){ })
-                            let orderstatus={status:2,updated_at:new Date().getTime()}
+                            let orderstatus={status:2}
                             console.log('ORDER ID: '+order_id+' toppings completed at '+new Date().toTimeString().split(' ')[0])
                             executeQueryUpdate('UPDATE `orders` SET ? where `order_id`=? ',
                             [orderstatus, order_id],

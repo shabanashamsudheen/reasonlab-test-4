@@ -7,13 +7,13 @@ const pool = mysql.createPool({
   connectTimeout: 60 * 60 * 1000,
   acquireTimeout: 60 * 60 * 1000,
   waitForConnections: true,
-  port: process.env.MYSQL_PORT,
+  port: 3306,
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB
+  database: process.env.MYSQL_DATABASE
 });
-
+console.log(process.env)
 function executeQuerySelect(sql, params = [], callback = null) {
 
   pool.getConnection(function (err, connection) {
