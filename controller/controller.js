@@ -157,7 +157,7 @@ function handovertoWaiter(){
                                     })
                                     let orderstatus={status:4}
                                     console.log('ORDER ID: '+order_id+' served at '+new Date().toTimeString().split(' ')[0])
-                                    console.log('ORDER ID: '+order_id+' Total Time taken - '+((new Date().getTime()-new Date(orders[0].created_at).getTime())))+'ms'
+                                    console.log('ORDER ID: '+order_id+' Total Time taken - '+((new Date().getTime()-new Date(orders[0].created_at).getTime()))+' ms')
                                     executeQueryUpdate('UPDATE `orders` SET ? where `order_id`=? ',
                                     [orderstatus, order_id],
                                     function (err, result) {
