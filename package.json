@@ -1,0 +1,30 @@
+{
+  "name": "reasonlab-test-4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shabanashamsudheen/reasonlab-test-4.git"
+  },
+  "author": "shabana shamsudheen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shabanashamsudheen/reasonlab-test-4/issues"
+  },
+  "homepage": "https://github.com/shabanashamsudheen/reasonlab-test-4#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "joi": "^17.6.0",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.19",
+    "path": "^0.12.7",
+    "winston": "^3.8.1"
+  }
+}
