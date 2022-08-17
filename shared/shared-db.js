@@ -13,7 +13,6 @@ const pool = mysql.createPool({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE
 });
-console.log(process.env)
 function executeQuerySelect(sql, params = [], callback = null) {
 
   pool.getConnection(function (err, connection) {
